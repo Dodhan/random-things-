@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온도 체크</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #c8a8e9 0%, #b899d4 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c8a8e9 0%, #b899d4 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #c8a8e9 0%, #b899d4 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(200, 168, 233, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(200, 168, 233, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.clear {
+            background: linear-gradient(135deg, #d4a4c8 0%, #c899be 100%);
+            box-shadow: 0 4px 15px rgba(212, 164, 200, 0.4);
+        }
+
+        .btn.clear:hover {
+            box-shadow: 0 8px 25px rgba(212, 164, 200, 0.6);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-weight: 700;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #c8a8e9 0%, #b899d4 100%);
+            color: white;
+            font-weight: 700;
+        }
+
+        .time-header {
+            background: linear-gradient(135deg, #d1b3e6 0%, #c4a6d9 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .item-header {
+            background: linear-gradient(135deg, #e0c7f0 0%, #d6bde8 100%);
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .temp-input {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .temp-input:focus {
+            outline: none;
+            border-color: #c8a8e9;
+            box-shadow: 0 0 0 3px rgba(200, 168, 233, 0.1);
+        }
+
+        .item-input {
+            width: 60px;
+            padding: 6px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .item-input:focus {
+            outline: none;
+            border-color: #c8a8e9;
+            box-shadow: 0 0 0 3px rgba(200, 168, 233, 0.1);
+        }
+
+        .item-row {
+            background: #f8f9fa;
+        }
+
+        .item-row:nth-child(even) {
+            background: #ffffff;
+        }
+
+        .item-row:hover {
+            background: #f4f0f8;
+            transition: background-color 0.2s ease;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f0ebf5 0%, #ede6f2 100%);
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #6a4d7a;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+            
+            th, td {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+            
+            .temp-input, .item-input {
+                width: 50px;
+                padding: 4px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>온도 체크</h1>
+            <p>냉장 냉동 스프 싱크2개</p>
+        </div>
+        
+        <div class="content">
+            <div class="controls">
+                <button class="btn" onclick="fillAllRandom()">🎲 전체 랜덤 채우기</button>
+                <button class="btn clear" onclick="clearAll()">🗑️ 전체 지우기</button>
+            </div>
+
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">구분</th>
+                            <th colspan="2" class="day-header">월요일</th>
+                            <th colspan="2" class="day-header">화요일</th>
+                            <th colspan="2" class="day-header">수요일</th>
+                            <th colspan="2" class="day-header">목요일</th>
+                            <th colspan="2" class="day-header">금요일</th>
+                            <th colspan="2" class="day-header">토요일</th>
+                        </tr>
+                        <tr>
+                            <th class="time-header">오전</th>
+                            <th class="time-header">오후</th>
+                            <th class="time-header">오전</th>
+                            <th class="time-header">오후</th>
+                            <th class="time-header">오전</th>
+                            <th class="time-header">오후</th>
+                            <th class="time-header">오전</th>
+                            <th class="time-header">오후</th>
+                            <th class="time-header">오전</th>
+                            <th class="time-header">오후</th>
+                            <th class="time-header">오전</th>
+                            <th class="time-header">오후</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="status" id="status">
+                준비 완료! 전체 랜덤 버튼을 클릭해서 모든 숫자와 온도를 채워보세요.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 랜덤 숫자 생성 함수들
+        function getRandomNumber() {
+            const randomInt = Math.floor(Math.random() * 40) + 10; // 1.0~4.9
+            return (randomInt / 10).toFixed(1);
+        }
+
+        function getRandomSoupTemperature() {
+            const randomInt = Math.floor(Math.random() * 81) + 600; // 60.0~68.0
+            return (randomInt / 10).toFixed(1);
+        }
+
+        function getRandomThreeCompartmentSinkTemp() {
+            const randomInt = Math.floor(Math.random() * 31) + 400; // 40.0~43.0
+            return (randomInt / 10).toFixed(1);
+        }
+
+        function getRandomHandSinkTemp() {
+            const randomInt = Math.floor(Math.random() * 21) + 360; // 36.0~38.0
+            return (randomInt / 10).toFixed(1);
+        }
+
+        function getRandomFreezerTemp() {
+            const randomInt = Math.floor(Math.random() * 5); // 0~4
+            return (-18 - randomInt).toFixed(1); // -18.0 ~ -22.0
+        }
+
+        // 연속 중복 없는 랜덤 숫자 배열 생성 (1.0~4.9와 스프온도만 적용)
+        function getRandomNumbersWithoutConsecutive(count, isTemperature = false) {
+            const result = [];
+            let lastNumber = null;
+            
+            for (let i = 0; i < count; i++) {
+                let randomNumber;
+                let attempts = 0;
+                
+                do {
+                    randomNumber = isTemperature ? getRandomSoupTemperature() : getRandomNumber();
+                    attempts++;
+                    if (attempts > 100) break;
+                } while (randomNumber === lastNumber);
+                
+                result.push(randomNumber);
+                lastNumber = randomNumber;
+            }
+            
+            return result;
+        }
+
+        // 테이블 생성
+        function createTable() {
+            const tbody = document.getElementById('tableBody');
+            
+            // 42개 항목 (1.0~4.9)
+            for (let i = 1; i <= 42; i++) {
+                const itemRow = document.createElement('tr');
+                itemRow.className = 'item-row';
+                itemRow.innerHTML = `
+                    <td class="item-header">${i}</td>
+                    ${Array(12).fill(0).map((_, j) => 
+                        `<td><input type="text" class="item-input" id="item_${i}_${j}" placeholder="0.0"></td>`
+                    ).join('')}
+                `;
+                tbody.appendChild(itemRow);
+            }
+
+            // 냉동실 9개 품목 (-18.0~-22.0)
+            for (let i = 1; i <= 6; i++) {
+                const freezerRow = document.createElement('tr');
+                freezerRow.className = 'item-row';
+                freezerRow.innerHTML = `
+                    <td class="item-header">🧊 냉동실 ${i}</td>
+                    ${Array(12).fill(0).map((_, j) => 
+                        `<td><input type="text" class="temp-input" id="freezer_${i}_${j}" placeholder="-20.0"></td>`
+                    ).join('')}
+                `;
+                tbody.appendChild(freezerRow);
+            }
+
+            // 스프 온도 (60.0~68.0)
+            const soupTempRow = document.createElement('tr');
+            soupTempRow.innerHTML = `
+                <td class="item-header">🍲 스프 온도</td>
+                ${Array(12).fill(0).map((_, i) => 
+                    `<td><input type="text" class="temp-input" id="soup_temp_${i}" placeholder="65.4"></td>`
+                ).join('')}
+            `;
+            tbody.appendChild(soupTempRow);
+
+            // 3조싱크 온도 (40.0~43.0)
+            const threeCompartmentSinkRow = document.createElement('tr');
+            threeCompartmentSinkRow.innerHTML = `
+                <td class="item-header">🧽 3조싱크 온도</td>
+                ${Array(12).fill(0).map((_, i) => 
+                    `<td><input type="text" class="temp-input" id="three_sink_temp_${i}" placeholder="43.0"></td>`
+                ).join('')}
+            `;
+            tbody.appendChild(threeCompartmentSinkRow);
+
+            // 핸드싱크 온도 (36.0~38.0)
+            const handSinkRow = document.createElement('tr');
+            handSinkRow.innerHTML = `
+                <td class="item-header">🚿 핸드싱크 온도</td>
+                ${Array(12).fill(0).map((_, i) => 
+                    `<td><input type="text" class="temp-input" id="hand_sink_temp_${i}" placeholder="38.0"></td>`
+                ).join('')}
+            `;
+            tbody.appendChild(handSinkRow);
+        }
+
+        // 전체 랜덤 채우기
+        function fillAllRandom() {
+            // 42개 항목 (1.0~4.9, 연속 중복 방지)
+            const totalCells = 42 * 12;
+            const randomNumbers = getRandomNumbersWithoutConsecutive(totalCells, false);
+            
+            let index = 0;
+            for (let i = 1; i <= 42; i++) {
+                for (let j = 0; j < 12; j++) {
+                    document.getElementById(`item_${i}_${j}`).value = randomNumbers[index];
+                    index++;
+                }
+            }
+
+            // 냉동실 6개 품목 (-18.0~-22.0, 완전 랜덤)
+            for (let i = 1; i <= 6; i++) {
+                for (let j = 0; j < 12; j++) {
+                    document.getElementById(`freezer_${i}_${j}`).value = getRandomFreezerTemp();
+                }
+            }
+
+            // 스프 온도 (60.0~68.0, 연속 중복 방지)
+            const soupTemps = getRandomNumbersWithoutConsecutive(12, true);
+            for (let i = 0; i < 12; i++) {
+                document.getElementById(`soup_temp_${i}`).value = soupTemps[i];
+            }
+
+            // 3조싱크 & 핸드싱크 온도 (완전 랜덤)
+            for (let i = 0; i < 12; i++) {
+                document.getElementById(`three_sink_temp_${i}`).value = getRandomThreeCompartmentSinkTemp();
+                document.getElementById(`hand_sink_temp_${i}`).value = getRandomHandSinkTemp();
+            }
+            
+            document.getElementById('status').innerHTML = '🎲 전체 랜덤 숫자가 채워졌습니다! (42개 항목 + 냉동실 9개 + 모든 온도)';
+        }
+
+        // 전체 지우기
+        function clearAll() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+            document.getElementById('status').innerHTML = '🗑️ 모든 데이터가 지워졌습니다.';
+        }
+
+        // 페이지 로드 시 테이블 생성
+        document.addEventListener('DOMContentLoaded', function() {
+            createTable();
+        });
+    </script>
+</body>
+</html>
