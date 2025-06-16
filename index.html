@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>온도 체크</title>
+    <title>온도 체크 및 숫자 관리 - 최종버전</title>
     <style>
         * {
             margin: 0;
@@ -192,28 +192,70 @@
         }
 
         @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
             .header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 0.95rem;
             }
             
             .controls {
                 flex-direction: column;
                 align-items: center;
+                gap: 10px;
             }
             
             .btn {
-                width: 200px;
+                width: 100%;
+                max-width: 250px;
+                font-size: 1.1rem;
+                padding: 14px 20px;
+            }
+            
+            .table-container {
+                font-size: 0.8rem;
             }
             
             th, td {
-                padding: 8px;
-                font-size: 0.85rem;
+                padding: 6px 4px;
+                font-size: 0.75rem;
+            }
+            
+            .item-header {
+                padding-left: 8px;
+                font-size: 0.8rem;
+                min-width: 80px;
             }
             
             .temp-input, .item-input {
-                width: 50px;
-                padding: 4px;
+                width: 45px;
+                padding: 6px 2px;
                 font-size: 0.8rem;
+                border: 1px solid #ddd;
+            }
+            
+            .day-header {
+                font-size: 0.8rem;
+                padding: 8px 4px;
+            }
+            
+            .time-header {
+                font-size: 0.75rem;
+                padding: 6px 2px;
+            }
+            
+            .status {
+                font-size: 0.9rem;
+                padding: 12px;
             }
         }
     </style>
@@ -221,8 +263,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>온도 체크</h1>
-            <p>냉장 냉동 스프 싱크2개</p>
+            <h1>온도체크 일지</h1>
         </div>
         
         <div class="content">
@@ -263,8 +304,7 @@
                 </table>
             </div>
 
-            <div class="status" id="status">
-                준비 완료! 전체 랜덤 버튼을 클릭해서 모든 숫자와 온도를 채워보세요.
+            <div class="status" id="status" style="display: none;">
             </div>
         </div>
     </div>
@@ -335,7 +375,7 @@
                 tbody.appendChild(itemRow);
             }
 
-            // 냉동실 9개 품목 (-18.0~-22.0)
+            // 냉동실 6개 품목 (-18.0~-22.0)
             for (let i = 1; i <= 6; i++) {
                 const freezerRow = document.createElement('tr');
                 freezerRow.className = 'item-row';
@@ -412,7 +452,7 @@
                 document.getElementById(`hand_sink_temp_${i}`).value = getRandomHandSinkTemp();
             }
             
-            document.getElementById('status').innerHTML = '🎲 전체 랜덤 숫자가 채워졌습니다! (42개 항목 + 냉동실 9개 + 모든 온도)';
+            document.getElementById('status').innerHTML = '🎲 전체 랜덤 숫자가 채워졌습니다! (42개 항목 + 냉동실 6개 + 모든 온도)';
         }
 
         // 전체 지우기
